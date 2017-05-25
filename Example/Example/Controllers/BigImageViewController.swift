@@ -49,5 +49,4 @@ class BigImageViewController: UIViewController,UIScrollViewDelegate {
             getData.url = imageUrl
         }
     }
-
 }

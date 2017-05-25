@@ -10,6 +10,7 @@ import UIKit
 
 
 //TODO: Add unwind
+//Very simple Custom Segue
 class CustomDetailSegue: UIStoryboardSegue {
     
     override func perform() {
@@ -18,8 +19,11 @@ class CustomDetailSegue: UIStoryboardSegue {
         }
         let window = UIApplication.shared.keyWindow
 
+        let _ = firstVC.view
+        let _ = secondVC.view
         let userCell = firstVC.collectionView?.cellForItem(at: firstVC.selectedIndexPath)
-        let frame = window?.convert(userCell!.frame, to: nil)
+        userCell?.isHidden = true
+        let frame = userCell?.superview?.convert(userCell!.frame, to: nil)
         let userImage = firstVC.collectionView?.cellForItem(at: firstVC.selectedIndexPath)!.snapshotView()
         userImage?.frame = frame!
         let secondFrame = secondVC.userImageView.frame
@@ -28,9 +32,12 @@ class CustomDetailSegue: UIStoryboardSegue {
         
         UIView.animate(withDuration: 1, animations: {
             userImage?.frame = secondFrame
+            firstVC.view.alpha = 0
         }) { _ in
             firstVC.navigationController?.pushViewController(secondVC, animated: false)
             userImage?.removeFromSuperview()
+            userCell?.isHidden = false
+            firstVC.view.alpha = 1
         }
         
     }

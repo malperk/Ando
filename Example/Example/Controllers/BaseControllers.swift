@@ -10,7 +10,7 @@ import UIKit
 
 
 class BaseViewController: UIViewController {
-    var destinationViewController: UIViewController?
+    weak var destinationViewController: UIViewController?
 }
 
 // MARK: - Navigation
@@ -22,7 +22,7 @@ extension BaseViewController{
 }
 
 class BaseCollectionViewController: UICollectionViewController {
-    var destinationViewController: UIViewController?
+    weak var destinationViewController: UIViewController?
 }
 
 // MARK: - Navigation

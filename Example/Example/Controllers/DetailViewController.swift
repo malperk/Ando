@@ -24,8 +24,7 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
         super.viewDidLoad()
         self.userImagesCollectionView.dataSource = self
         self.userImagesCollectionView.delegate = self
-        self.userImageView.layer.borderColor = Color.white.cgColor
-        self.userImageView.layer.borderWidth = 3
+        self.backgroundImageView.addParallax(30)
     }
 
     // MARK: - UICollectionViewDataSource
@@ -63,6 +62,7 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
     
     // MARK: - Data Functions
     func getItems() {
+        self.navigationItem.title = self.selectedItem?.user.username
         self.userImageView.ando.url = self.selectedItem?.user.profileImage.large ?? ""
         self.backgroundImageView.ando.url = self.selectedItem?.urls.small ?? ""
         let getData = Ando(type: .json)
@@ -88,9 +88,6 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
         if let userPhotosurl = self.selectedItem?.user.links.photos {
             HUD.shared.show(animate: true)
             getData.url = userPhotosurl + clientId
-            print(userPhotosurl + clientId)
         }
     }
-
-
 }

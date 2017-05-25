@@ -18,7 +18,6 @@ class MainCollectionViewController: BaseCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.getItems()
-        ACache.shared.setMaxLenght(<#T##maxLenght: Int##Int#>)
     }
 
 

@@ -29,8 +29,25 @@ class ExampleUITests: XCTestCase {
     }
     
     func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let app = XCUIApplication()
+        let collectionViewsQuery = app.collectionViews
+        collectionViewsQuery.children(matching: .cell).element(boundBy: 1).otherElements.containing(.staticText, identifier:"nicholaskampouris").element.tap()
+        collectionViewsQuery.children(matching: .cell).element(boundBy: 3).children(matching: .other).element.tap()
+        
+        let image = app.scrollViews.children(matching: .image).element
+        image.swipeUp()
+        image.swipeRight()
+        image.swipeUp()
+        
+        let exampleBigimageviewNavigationBar = app.navigationBars["Example.BigImageView"]
+        exampleBigimageviewNavigationBar.buttons["nicholaskampouris"].tap()
+        app.navigationBars["nicholaskampouris"].buttons["USERS"].tap()
+        collectionViewsQuery.cells.otherElements.containing(.staticText, identifier:"llyn").element.tap()
+        collectionViewsQuery.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.tap()
+        exampleBigimageviewNavigationBar.buttons["llyn"].tap()
+        app.navigationBars["llyn"].buttons["USERS"].tap()
+        
     }
     
 }

@@ -17,5 +17,6 @@ class DetailCollectionViewCell: UICollectionViewCell {
         self.item = item
         self.mainImageView.ando.url = item.urls.thumb
     }
-    
+
+
 }
