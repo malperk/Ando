@@ -33,8 +33,6 @@ public struct AResponse {
 
 ## Imageview Usage
 
-1. Add `import Aldo` to your source code.
-
 ```Swift
 imageView.ando.url = "image url"
 ```
