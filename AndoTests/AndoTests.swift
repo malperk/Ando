@@ -54,4 +54,32 @@ class AndoTests: XCTestCase {
         }
     }
     
+    func testGetJson() {
+        let asyncExpectation = expectation(description: "testGetJson")
+        
+        let dwn = Ando(type: .json)
+        dwn.callback = {response in
+            XCTAssertNil(response.error)
+            XCTAssertNotNil(response.item)
+            asyncExpectation.fulfill()
+        }
+        dwn.url = "http://httpbin.org/get"
+        
+        waitForExpectations(timeout: 5) { error in
+            XCTAssertNil(error)
+        }
+    }
+    
+    func testUIImageViewExtension() {
+        //let asyncExpectation = expectation(description: "testUIImageViewExtension")
+        let iv = UIImageView()
+        iv.ando
+        iv.ando
+        iv.ando.url = "http://httpbin.org/image/png"
+        XCTAssertNil(iv.image)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            XCTAssertNotNil(iv.image)
+        }
+    }
+    
 }

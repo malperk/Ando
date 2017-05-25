@@ -13,11 +13,12 @@ private let reuseIdentifier = "Cell"
 
 class MainCollectionViewController: BaseCollectionViewController {
     var items: [RootClass] = []
-
+    var selectedIndexPath = IndexPath(row: 0, section: 0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.getItems()
-
+        ACache.shared.setMaxLenght(<#T##maxLenght: Int##Int#>)
     }
 
 
@@ -43,10 +44,22 @@ class MainCollectionViewController: BaseCollectionViewController {
     }
 
     // MARK: - UICollectionViewDelegate
+    override public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
+        if let myCell = cell as? MainCollectionViewCell{
+            myCell.userImageView.ando.cancel()
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool{
+        self.selectedIndexPath = indexPath
+        return true
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedItem = self.items[indexPath.row];
         if let vc = self.destinationViewController as? DetailViewController {
             vc.selectedItem = selectedItem
+            vc.getItems()
         }
     }
 

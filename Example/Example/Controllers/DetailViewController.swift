@@ -24,9 +24,8 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
         super.viewDidLoad()
         self.userImagesCollectionView.dataSource = self
         self.userImagesCollectionView.delegate = self
-        self.getItems()
-        self.userImageView.ando.url = self.selectedItem?.user.profileImage.large ?? ""
-        self.backgroundImageView.ando.url = self.selectedItem?.urls.small ?? ""
+        self.userImageView.layer.borderColor = Color.white.cgColor
+        self.userImageView.layer.borderWidth = 3
     }
 
     // MARK: - UICollectionViewDataSource
@@ -49,6 +48,12 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
     }
     
     // MARK: - UICollectionViewDelegate
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
+        if let myCell = cell as? MainCollectionViewCell{
+            myCell.userImageView.ando.cancel()
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedItem = self.itemDetails[indexPath.row];
         if let vc = self.destinationViewController as? BigImageViewController {
@@ -58,6 +63,8 @@ class DetailViewController: BaseViewController,UICollectionViewDataSource,UIColl
     
     // MARK: - Data Functions
     func getItems() {
+        self.userImageView.ando.url = self.selectedItem?.user.profileImage.large ?? ""
+        self.backgroundImageView.ando.url = self.selectedItem?.urls.small ?? ""
         let getData = Ando(type: .json)
         getData.callback = { [weak self] response in
             guard response.error == nil else {

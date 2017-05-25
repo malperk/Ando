@@ -22,18 +22,24 @@ class CacheTests: XCTestCase {
     }
     
     func testChangeMaxLenght() {
-        for _ in 0..<59 {
+        for _ in 0..<5 {
             ACache.shared.addItem(url: arc4random_uniform(1000).description, item: 5)
         }
-        ACache.shared.setMaxLenght(20)
-        
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        ACache.shared.addItem(url: "1_0", item: 10)
+        ACache.shared.addItem(url: "1_1", item: 11)
+        ACache.shared.addItem(url: "1_2", item: 12)
+        ACache.shared.addItem(url: "1_3", item: 13)
+        ACache.shared.addItem(url: "1_4", item: 14)
+        for _ in 0..<5 {
+            ACache.shared.addItem(url: arc4random_uniform(1000).description, item: 5)
         }
+
+        ACache.shared.setMaxLenght(8)
+        XCTAssertNil(ACache.shared.getItem(url:"1_0"))
+        XCTAssertNil(ACache.shared.getItem(url:"1_1"))
+        XCTAssertNotNil(ACache.shared.getItem(url:"1_2"))
+        
+        
     }
     
 }

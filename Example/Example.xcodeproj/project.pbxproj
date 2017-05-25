@@ -37,7 +37,9 @@
 		E433F23D1ED57FCD002A4970 /* UrlConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F23C1ED57FCD002A4970 /* UrlConstants.swift */; };
 		E433F2401ED59485002A4970 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F23F1ED59485002A4970 /* HUD.swift */; };
 		E433F2421ED594E0002A4970 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F2411ED594E0002A4970 /* Color.swift */; };
-		E433F2451ED59586002A4970 /* Uicolor+Flat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F2441ED59586002A4970 /* Uicolor+Flat.swift */; };
+		E433F2451ED59586002A4970 /* UIColor+Flat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F2441ED59586002A4970 /* UIColor+Flat.swift */; };
+		E433F24A1ED70D98002A4970 /* CustomDetailSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F2491ED70D98002A4970 /* CustomDetailSegue.swift */; };
+		E433F24D1ED719D7002A4970 /* UIView+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = E433F24C1ED719D7002A4970 /* UIView+Snapshot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,7 +130,9 @@
 		E433F23C1ED57FCD002A4970 /* UrlConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlConstants.swift; sourceTree = "<group>"; };
 		E433F23F1ED59485002A4970 /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		E433F2411ED594E0002A4970 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		E433F2441ED59586002A4970 /* Uicolor+Flat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Uicolor+Flat.swift"; sourceTree = "<group>"; };
+		E433F2441ED59586002A4970 /* UIColor+Flat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Flat.swift"; sourceTree = "<group>"; };
+		E433F2491ED70D98002A4970 /* CustomDetailSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDetailSegue.swift; sourceTree = "<group>"; };
+		E433F24C1ED719D7002A4970 /* UIView+Snapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Snapshot.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -292,6 +296,7 @@
 				E433F2411ED594E0002A4970 /* Color.swift */,
 				E433F23F1ED59485002A4970 /* HUD.swift */,
 				B95412C41ED5FBB80086DD52 /* CustomTransition.swift */,
+				E433F2491ED70D98002A4970 /* CustomDetailSegue.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -299,8 +304,9 @@
 		E433F2431ED5957A002A4970 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				E433F2441ED59586002A4970 /* Uicolor+Flat.swift */,
+				E433F2441ED59586002A4970 /* UIColor+Flat.swift */,
 				B95412C11ED5E0410086DD52 /* UIView+Parallax.swift */,
+				E433F24C1ED719D7002A4970 /* UIView+Snapshot.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -469,6 +475,7 @@
 				B95412D91ED6107C0086DD52 /* UDProfileImage.swift in Sources */,
 				B95412F31ED6216D0086DD52 /* BigImageViewController.swift in Sources */,
 				E433F2371ED57F0B002A4970 /* ProfileImage.swift in Sources */,
+				E433F24D1ED719D7002A4970 /* UIView+Snapshot.swift in Sources */,
 				B95412DC1ED6107C0086DD52 /* UDUser.swift in Sources */,
 				B95412F61ED6238A0086DD52 /* BaseControllers.swift in Sources */,
 				B95412E61ED616F70086DD52 /* DetailCollectionViewCell.swift in Sources */,
@@ -479,10 +486,11 @@
 				B95412E71ED616F70086DD52 /* MainCollectionViewCell.swift in Sources */,
 				E433F2421ED594E0002A4970 /* Color.swift in Sources */,
 				B95412C51ED5FBB80086DD52 /* CustomTransition.swift in Sources */,
+				E433F24A1ED70D98002A4970 /* CustomDetailSegue.swift in Sources */,
 				B95412DA1ED6107C0086DD52 /* UDRootClass.swift in Sources */,
 				E433F23A1ED57F0B002A4970 /* User.swift in Sources */,
 				B95412DB1ED6107C0086DD52 /* UDUrl.swift in Sources */,
-				E433F2451ED59586002A4970 /* Uicolor+Flat.swift in Sources */,
+				E433F2451ED59586002A4970 /* UIColor+Flat.swift in Sources */,
 				E433F2401ED59485002A4970 /* HUD.swift in Sources */,
 				E433F2351ED57F0B002A4970 /* Category.swift in Sources */,
 				E433F23D1ED57FCD002A4970 /* UrlConstants.swift in Sources */,

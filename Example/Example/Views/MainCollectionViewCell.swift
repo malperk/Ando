@@ -19,7 +19,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         self.userImageView.ando.url = item.user.profileImage.large
         self.usernameLabel.text = item.user.username
     }
-    //TODO: Add Parallax
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
     }
