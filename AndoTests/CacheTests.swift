@@ -4,7 +4,7 @@ import XCTest
 final class CacheTests: XCTestCase {
     func testCapacityAndEviction() {
         let cache = ACache()
-        cache.setMaxLenght(2)
+        cache.setMaxLength(2)
         cache.addItem(url: "a", item: 1)
         cache.addItem(url: "b", item: 2)
         cache.addItem(url: "c", item: 3)

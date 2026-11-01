@@ -54,7 +54,7 @@ struct AndoPackageTests {
         #expect(cache.getItem(url: "a") == nil)
         #expect(cache.getItem(url: "b") as? Int == 2)
         #expect(cache.getItem(url: "c") as? Int == 3)
-        cache.setMaxLenght(1)
+        cache.setMaxLength(1)
         #expect(cache.count == 1)
         #expect(cache.getItem(url: "b") == nil)
         cache.setMaxLength(0)

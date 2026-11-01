@@ -35,11 +35,6 @@ public final class ACache: CacheProtocol, @unchecked Sendable {
         values[url] = item
     }
 
-    /// Historical method name is preserved for source compatibility.
-    public func setMaxLenght(_ maxLenght: Int) {
-        setMaxLength(maxLenght)
-    }
-
     /// Zero disables caching. Negative capacities are treated as zero.
     public func setMaxLength(_ value: Int) {
         lock.lock()
