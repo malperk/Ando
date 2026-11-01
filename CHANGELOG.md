@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 — 2026-11-01
+
+- Remove the legacy misspelled cache capacity setter from the public API. Only `ACache.setMaxLength(_:)` is supported.
+- Update Swift Package and XCTest coverage and README examples to use the correct name exclusively.
+- **Breaking change:** Existing code calling the old spelling must be migrated to `setMaxLength(_:)` before updating from 2.x.
+
 ## 2.0.0 — 2026-11-01
 
 - Require Swift 6 and iOS 15+; introduce Swift Package Manager support.

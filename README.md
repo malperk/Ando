@@ -1,4 +1,4 @@
-# Ando 2.0.0
+# Ando 3.0.0
 
 A lightweight iOS downloader for images and JSON, modernized for Swift 6. The original `imageView.ando.url` and `Ando(type: .json)` callback APIs remain available.
 
@@ -51,8 +51,6 @@ func loadJSON() async throws -> [String: Any] {
 ```swift
 ACache.shared.setMaxLength(200)
 ACache.shared.clear()
-// Legacy spelling also works:
-ACache.shared.setMaxLenght(200)
 ```
 
 ## Development
@@ -61,7 +59,7 @@ ACache.shared.setMaxLenght(200)
 swift test
 ```
 
-Package tests use a mock URL protocol and do not depend on external HTTP endpoints. The old `Example/` UIKit demo remains an archival 2017 example and uses retired third-party endpoints; it is not part of the supported v2 distribution.
+Package tests use a mock URL protocol and do not depend on external HTTP endpoints. The old `Example/` UIKit demo remains an archival 2017 example and uses retired third-party endpoints; it is not part of the supported v3 distribution.
 
 ## License
 
