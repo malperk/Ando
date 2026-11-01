@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run package tests
         run: swift test
+      - name: Build iOS framework
+        run: xcodebuild -project Ando.xcodeproj -target Ando -configuration Debug -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
   tag-release:
     if: github.event_name == 'push'
     needs: test
