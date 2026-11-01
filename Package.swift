@@ -7,6 +7,6 @@ let package = Package(
     products: [.library(name: "Ando", targets: ["Ando"])],
     targets: [
         .target(name: "Ando", path: "Ando", exclude: ["Ando.h", "Info.plist"]),
-        .testTarget(name: "AndoPackageTests", dependencies: ["Ando"], path: "Tests/AndoPackageTests")
+        .testTarget(name: "AndoTests", dependencies: ["Ando"], path: "Tests/AndoPackageTests")
     ]
 )
