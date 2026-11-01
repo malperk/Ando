@@ -1,34 +1,23 @@
-//
-//  UIImageView+Ando.swift
-//  Ando
-//
-//  Created by Alper KARATAŞ on 24/05/2017.
-//  Copyright © 2017 Alper KARATAŞ. All rights reserved.
-//
+#if canImport(UIKit)
+import UIKit
+import ObjectiveC
 
-import Foundation
+// The associated object is only accessed on the main actor.
+nonisolated(unsafe) private var andoAssociationKey: UInt8 = 0
 
-private var aKey: UInt8 = 0
-
+@MainActor
 public extension UIImageView {
     var ando: Ando {
-        if let value = objc_getAssociatedObject(self, &aKey) as? Ando {
-            return value
-        } else {
-            let temp = Ando()
-            temp.callback = { [weak self] response in
-                guard response.error == nil else {
-                    print(response.error.debugDescription)
-                    return
-                }
-                if let img = response.item as? UIImage {
-                    DispatchQueue.main.async {
-                        self?.image = img
-                    }
-                }
-            }
-            objc_setAssociatedObject(self, &aKey, temp, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-            return temp
+        if let existing = objc_getAssociatedObject(self, &andoAssociationKey) as? Ando {
+            return existing
         }
+        let downloader = Ando()
+        downloader.callback = { [weak self] response in
+            guard let image = response.item as? UIImage, response.error == nil else { return }
+            self?.image = image
+        }
+        objc_setAssociatedObject(self, &andoAssociationKey, downloader, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return downloader
     }
 }
+#endif

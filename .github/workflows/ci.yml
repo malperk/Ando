@@ -1,0 +1,32 @@
+name: Swift Package CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run package tests
+        run: swift test
+  tag-release:
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag v2.0.0 when tests pass
+        run: |
+          if git ls-remote --exit-code --tags origin refs/tags/v2.0.0 >/dev/null 2>&1; then
+            echo "v2.0.0 already exists"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a v2.0.0 -m "Ando 2.0.0"
+            git push origin v2.0.0
+          fi

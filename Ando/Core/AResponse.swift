@@ -1,33 +1,18 @@
-//
-//  AResponse.swift
-//  Pods
-//
-//  Created by Alper KARATAŞ on 23/05/2017.
-//
-//
-
 import Foundation
 
+/// `item` contains a UIImage for `.image` or a Foundation JSON value for `.json`.
 public struct AResponse {
     public let item: Any?
     public let type: AType
     public let error: NSError?
-    
-    init(item: Any?, type: AType, error: NSError?) {
+
+    init(item: Any?, type: AType, error: NSError? = nil) {
         self.item = item
         self.type = type
         self.error = error
     }
-    
+
     init(error: NSError, type: AType) {
-        self.item = nil
-        self.type = type
-        self.error = error
-    }
-    
-    init(item: Any, type: AType) {
-        self.item = item
-        self.type = type
-        self.error = nil
+        self.init(item: nil, type: type, error: error)
     }
 }
