@@ -1,55 +1,68 @@
-# Ando, an item (image,json) downloader written in Swift for iOS
+# Ando 2.0.0
 
-Ando is an item download library written in Swift. It allows to item.
+A lightweight iOS downloader for images and JSON, modernized for Swift 6. The original `imageView.ando.url` and `Ando(type: .json)` callback APIs remain available.
 
-```Swift
-imageView.ando.url = "image url"
+## Requirements
+
+- iOS 15+
+- Xcode 16+ / Swift 6+
+- Swift Package Manager (recommended)
+
+In Xcode, add the package using `https://github.com/malperk/Ando` and select the `Ando` library. Git tags for releases follow `vMAJOR.MINOR.PATCH` when published.
+
+## UIImageView example
+
+```swift
+imageView.ando.url = "https://example.com/photo.jpg"
+// Cancel when a view is no longer needed:
+imageView.ando.cancel()
 ```
 
-### Usage
+## JSON callback example
 
-
-```Swift
-let ando = Ando(type: .json)
-ando.callback = { response in
+```swift
+let downloader = Ando(type: .json)
+downloader.callback = { response in
+    if let error = response.error { print(error); return }
+    if let json = response.item as? [String: Any] { print(json) }
 }
-ando.url = "item url"
+downloader.url = "https://example.com/data.json"
 ```
 
-Response is AResponse class which is like this ;
-```Swift
-public struct AResponse {
-    public let item: Any?
-    public let type: AType
-    public let error: NSError?
+All callback invocations run on the main actor. Setting `url` cancels any preceding request. HTTP errors, invalid URLs, and decoding failures are reported via `response.error`. Cancellation is silent.
+
+## Swift concurrency
+
+```swift
+@MainActor
+func loadJSON() async throws -> [String: Any] {
+    let downloader = Ando(type: .json)
+    let response = try await downloader.load(from: URL(string: "https://example.com/data.json")!)
+    return response.item as? [String: Any] ?? [:]
 }
 ```
 
+`load(from:)` is an independently cancellable async operation when its calling task is cancelled. The `cancel()` method cancels only downloads initiated by setting the `url` property.
 
-* Items are downloaded asynchronously.
-* Uses URLSession for networking
-* Allows to configure cache size.
-* Provides closure properties for error handling.
+## Cache
 
-## Imageview Usage
+`ACache.shared` is an in-memory, thread-safe FIFO cache with a default capacity of **100 items** (not a byte limit). Entries are keyed by URL and requested item type. Adjust or reset it with:
 
-```Swift
-imageView.ando.url = "image url"
+```swift
+ACache.shared.setMaxLength(200)
+ACache.shared.clear()
+// Legacy spelling also works:
+ACache.shared.setMaxLenght(200)
 ```
 
+## Development
 
-## Canceling download
+```bash
+swift test
+```
 
-Ongoing image download for the image view is automatically canceled when:
+Package tests use a mock URL protocol and do not depend on external HTTP endpoints. The old `Example/` UIKit demo remains an archival 2017 example and uses retired third-party endpoints; it is not part of the supported v2 distribution.
 
-1. Call `imageView.ando.cancel()` to manually cancel the download.
-2. New image download is started: `imageView.ando.url = ...`.
+## License
 
-##  Caching
-Ando has singleton memory cache and  automatically cache downloaded items. Default cache size is 100. 
-Use the `ACache.shared.setMaxLenght(maxLenght: Int)` to change caching settings. 
-## Demo app
-
-The demo iOS app shows how to load images in a collection view with Ando.
-
-
+GPL-3.0 (see [LICENSE](LICENSE)). Check GPL obligations before integrating into closed-source apps.

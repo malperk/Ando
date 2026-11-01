@@ -1,88 +1,104 @@
-//
-//  Ando.swift
-//  Ando
-//
-//  Created by Alper KARATAŞ on 23/05/2017.
-//  Copyright © 2017 Alper KARATAŞ. All rights reserved.
-//
-
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
-public typealias CompletionBlock = (AResponse) -> Void
+/// Callbacks are always delivered on the main actor, including cache hits and failures.
+public typealias CompletionBlock = @MainActor (AResponse) -> Void
 
+/// A small, cancellable image/JSON downloader. `url` and `callback` retain the original API.
+@MainActor
 public final class Ando {
-    
-    private var dataTask: URLSessionDataTask?
-    private var type = AType.image
-    
-    public init() {}
-    public init(type: AType) {
-        self.type = type
-    }
-    
+    public let type: AType
+    private let session: URLSession
+    private var task: Task<Void, Never>?
+    private var generation: UInt64 = 0
+
     public var callback: CompletionBlock?
-    
+
+    /// Setting a URL cancels any previous request, including when the new URL is cached.
     public var url: String = "" {
-        didSet {
-            download()
-        }
+        didSet { startDownload() }
     }
-    
+
+    public convenience init() {
+        self.init(type: .image)
+    }
+
+    public convenience init(type: AType) {
+        self.init(type: type, session: .shared)
+    }
+
+    /// Inject a custom session to configure timeouts or test via URLProtocol.
+    public init(type: AType, session: URLSession) {
+        self.type = type
+        self.session = session
+    }
+
+    /// Cancels the `url` property's in-flight request. Does not cancel standalone `load` calls.
     public func cancel() {
-        dataTask?.cancel()
+        generation &+= 1
+        task?.cancel()
+        task = nil
     }
-    
-    func download() {
-        if let cachedItem = ACache.shared.getItem(url: url) {
-            let response = AResponse.init(item: cachedItem, type: self.type)
-            self.callback?(response)
+
+    /// Modern async API; uses a type-aware memory cache and validates HTTP status codes.
+    public func load(from url: URL) async throws -> AResponse {
+        guard let scheme = url.scheme?.lowercased(),
+              (scheme == "https" || scheme == "http"),
+              url.host != nil else {
+            throw AError.error(code: .WrongURL, failureReason: "A valid HTTP(S) URL is required")
+        }
+
+        let cacheKey = "\(type.rawValue):\(url.absoluteString)"
+        if let cached = ACache.shared.getItem(url: cacheKey) {
+            try Task.checkCancellation()
+            return AResponse(item: cached, type: type)
+        }
+
+        let (data, response) = try await session.data(from: url)
+        try Task.checkCancellation()
+        guard let http = response as? HTTPURLResponse else {
+            throw AError.error(code: .ProcessResponseError, failureReason: "Not an HTTP response")
+        }
+        guard (200...299).contains(http.statusCode) else {
+            throw AError.error(code: .InvalidHTTPStatus, failureReason: "HTTP \(http.statusCode)")
+        }
+
+        let item = try Item(type: type).get(data)
+        try Task.checkCancellation()
+        ACache.shared.addItem(url: cacheKey, item: item)
+        return AResponse(item: item, type: type)
+    }
+
+    private func startDownload() {
+        cancel()
+        let requestedURL = url
+        guard let parsed = URL(string: requestedURL),
+              let scheme = parsed.scheme?.lowercased(),
+              (scheme == "http" || scheme == "https"),
+              parsed.host != nil else {
+            callback?(AResponse(error: AError.error(code: .WrongURL, failureReason: "Invalid HTTP(S) URL: \(requestedURL)"), type: type))
             return
         }
-        guard let gUrl = URL(string: url) else {
-            let error = AError.error(code: .WrongURL, failureReason: "Your url string:\"\(self.url)\" not a valid url")
-            let response = AResponse(error: error, type: self.type)
-            callback?(response)
-            return
-        }
-        if let task = self.dataTask {
-            task.cancel()
-        }
-        let session = URLSession.shared
-        dataTask = session.dataTask(with: gUrl) { data, urlResponse, error in
-            let aResponse = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-            if let response = aResponse {
-                self.dataTask = nil
-                self.addToCache(response:response)
-                self.callback?(response)
-            }
-        }
-        dataTask?.resume()
-        
-    }
-    
-    private func addToCache(response:AResponse){
-        guard let item = response.item else {
-            return
-        }
-        ACache.shared.addItem(url: self.url, item: item)
-    }
-    
-    private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> AResponse? {
-        if let aError = error as NSError? {
-            if aError.code == -999 {
-                return nil
-            }
-            return AResponse.init(error: aError, type: self.type)
-        }
-        if let aData = data {
+
+        let requestGeneration = generation
+        task = Task { [weak self] in
+            guard let self else { return }
             do {
-                let item = Item.init(type: self.type)
-                return AResponse.init(item: try item.get(aData), type: self.type)
-            } catch let error as NSError {
-                return AResponse.init(error: error, type: self.type)
+                let response = try await self.load(from: parsed)
+                try Task.checkCancellation()
+                guard self.generation == requestGeneration else { return }
+                self.task = nil
+                self.callback?(response)
+            } catch {
+                guard self.generation == requestGeneration else { return }
+                self.task = nil
+                guard !Task.isCancelled else { return }
+                let nsError = error as NSError
+                guard !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) else { return }
+                self.callback?(AResponse(error: nsError, type: self.type))
             }
         }
-        let error = AError.error(code: .ProcessResponseError, failureReason: "Unknown error when processing data from your url string:\"\(self.url)\"")
-        return AResponse(error: error, type: self.type)
     }
 }
